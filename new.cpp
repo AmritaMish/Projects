@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class Book {
+public:
+    string title;
+    string author;
+    int id;
+    bool available;
+
+    Book(string t, string a, int i) : title(t), author(a), id(i), available(true) {}
+};
+
+class Library {
+private:
+    vector<Book> books;
+
+public:
+    void addBook(const Book& book) {
+        books.push_back(book);
+    }
+
+    void displayBooks() {
+        cout << "Library Books:" << endl;
+        for (const auto& book : books) {
+            cout << "ID: " << book.id << ", Title: " << book.title << ", Author: " << book.author
+                 << ", Status: " << (book.available ? "Available" : "Checked Out") << endl;
+        }
+    }
+
+    bool checkOutBook(int id) {
+        for (auto& book : books) {
+            if (book.id == id && book.available) {
+                book.available = false;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool returnBook(int id) {
+        for (auto& book : books) {
+            if (book.id == id && !book.available) {
+                book.available = true;
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+int main() {
+    Library library;
+
+    // Adding some initial books
+    library.addBook(Book("The Catcher in the Rye", "J.D. Salinger", 1));
+    library.addBook(Book("To Kill a Mockingbird", "Harper Lee", 2));
+    library.addBook(Book("1984", "George Orwell", 3));
+
+    // Displaying available books
+    library.displayBooks();
+
+    // Checking out a book
+    int bookToCheckout = 2;
+    if (library.checkOutBook(bookToCheckout)) {
+        cout << "Book with ID " << bookToCheckout << " checked out successfully." << endl;
+    } else {
+        cout << "Book with ID " << bookToCheckout << " is either not available or doesn't exist." << endl;
+    }
+
+    // Displaying updated list after checking out a book
+    library.displayBooks();
+
+    // Returning a book
+    int bookToReturn = 1;
+    if (library.returnBook(bookToReturn)) {
+        cout << "Book with ID " << bookToReturn << " returned successfully." << endl;
+    } else {
+        cout << "Book with ID " << bookToReturn << " is either not checked out or doesn't exist." << endl;
+    }
+
+    // Displaying updated list after returning a book
+    library.displayBooks();
+
+    return 0;
+}
